@@ -17,7 +17,9 @@ _logger = logging.getLogger(__name__)
 
 
 @contextlib.contextmanager
-def _init_server(backend_uri, root_artifact_uri, extra_env=None, app="mlflow.server:app"):
+def _init_server(
+    backend_uri, root_artifact_uri, extra_env=None, app="mlflow.server:app", server_type=None
+):
     """
     Launch a new REST server using the tracking store specified by backend_uri and root artifact
     directory specified by root_artifact_uri.
