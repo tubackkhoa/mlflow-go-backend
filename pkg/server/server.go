@@ -8,7 +8,7 @@ import (
 	"net"
 	"path/filepath"
 	"time"
-
+	"github.com/gofiber/fiber/v2/middleware/cors"	
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -58,6 +58,12 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 		DisableStartupMessage: true,
 	})
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowMethods: "*",
+		AllowHeaders: "*",
+	}))
+
 	app.Use(compress.New())
 	app.Use(recover.New(recover.Config{EnableStackTrace: true}))
 	app.Use(logger.New(logger.Config{
@@ -78,6 +84,8 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 	app.Mount("/api/2.0", apiApp)
 	app.Mount("/ajax-api/2.0", apiApp)
 
+	// https://mlflow.thesis.io/
+
 	if cfg.StaticFolder != "" {
 		app.Static("/static-files", cfg.StaticFolder)
 		app.Get("/", func(c *fiber.Ctx) error {
@@ -90,6 +98,10 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 	})
 	app.Get("/version", func(c *fiber.Ctx) error {
 		return c.SendString(cfg.Version)
+	})
+
+	app.All("/graphql", func(c *fiber.Ctx) error {
+		return proxy.Do(c, "https://mlflow.thesis.io/graphql")
 	})
 
 	if cfg.PythonAddress != "" {
