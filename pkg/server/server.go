@@ -99,11 +99,6 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 	app.Get("/version", func(c *fiber.Ctx) error {
 		return c.SendString(cfg.Version)
 	})
-
-	app.All("/graphql", func(c *fiber.Ctx) error {
-		return proxy.Do(c, "https://mlflow.thesis.io/graphql")
-	})
-
 	if cfg.PythonAddress != "" {
 		app.Use(proxy.BalancerForward([]string{cfg.PythonAddress}))
 	}
