@@ -76,7 +76,7 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 	}
 
 	app.All("/graphql", func(c *fiber.Ctx) error {
-		return proxy.Do(c, "https://mlflow.thesis.io/graphql")
+		return proxy.Do(c, "http://127.0.0.1:5001/graphql")
 	})
 
 	app.Mount("/api/2.0", apiApp)
