@@ -11,6 +11,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -57,6 +58,12 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 		},
 		DisableStartupMessage: true,
 	})
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowMethods: "*",
+		AllowHeaders: "*",
+	}))
 
 	app.Use(compress.New())
 	app.Use(recover.New(recover.Config{EnableStackTrace: true}))
