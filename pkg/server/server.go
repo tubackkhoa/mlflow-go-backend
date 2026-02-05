@@ -82,7 +82,7 @@ func configureApp(ctx context.Context, cfg *config.Config) (*fiber.App, error) {
 	app.Mount("/api/2.0", apiApp)
 	app.Mount("/ajax-api/2.0", apiApp)
 
-	app.Post("/ajax-api/2.0/mlflow/logged-models/search", func(c *fiber.Ctx) error {
+	app.All("/ajax-api/2.0/mlflow/logged-models/search", func(c *fiber.Ctx) error {
 		return proxy.Do(c, "http://127.0.0.1:5001/ajax-api/2.0/mlflow/logged-models/search")
 	})
 
