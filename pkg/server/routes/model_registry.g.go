@@ -11,6 +11,12 @@ import (
 )
 
 func RegisterModelRegistryServiceRoutes(service service.ModelRegistryService, parser *parser.HTTPRequestParser, app *fiber.App) {
+	app.Get("/mlflow/gateway-proxy", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(fiber.Map{
+			"endpoints": []string{},
+		})
+	})
+
 	app.Post("/mlflow/registered-models/create", func(ctx *fiber.Ctx) error {
 		input := &protos.CreateRegisteredModel{}
 		if err := parser.ParseBody(ctx, input); err != nil {
